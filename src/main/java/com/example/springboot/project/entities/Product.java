@@ -1,4 +1,4 @@
-package com.example.springboot.project.model;
+package com.example.springboot.project.entities;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
