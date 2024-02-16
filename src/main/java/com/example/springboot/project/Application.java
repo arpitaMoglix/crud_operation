@@ -16,19 +16,19 @@ public class Application implements CommandLineRunner {
 
 	@Autowired
 	private ProductRepository productRepository;
+
 	@Override
 	public void run(String... args) throws Exception {
-		Product p = new Product();
-		p.setProductName("samsung washcare");
-		p.setProductPrice(73627);
-		p.setProductDescription("its a automatic washing machine");
-		productRepository.save(p);
+		Product product1 = new Product();
+		product1.setProductName("Samsung Washcare");
+		product1.setProductPrice(73627);
+		product1.setProductDescription("It's an automatic washing machine");
+		productRepository.save(product1);
 
-		Product p1 = new Product();
-		p1.setProductName("onePluse earbud");
-		p1.setProductPrice(2450);
-		p1.setProductDescription("its a bluethooth earbud");
-		productRepository.save(p1);
-
+		Product product2 = new Product();
+		product2.setProductName("OnePlus Earbuds");
+		product2.setProductPrice(2450);
+		product2.setProductDescription("It's a Bluetooth earbud");
+		productRepository.save(product2);
 	}
 }
