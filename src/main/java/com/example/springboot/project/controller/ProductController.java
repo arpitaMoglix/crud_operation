@@ -1,68 +1,50 @@
 package com.example.springboot.project.controller;
 
-import com.example.springboot.project.exception.ResourseNotFoundException;
-import com.example.springboot.project.model.Product;
-import com.example.springboot.project.repository.ProductRepository;
+import com.example.springboot.project.Service.MyServices;
+import com.example.springboot.project.dto.productDTO;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/v1/products")
+@RequestMapping("/api/v1/product")
 public class ProductController {
 
     @Autowired
-    private ProductRepository productRepository;
+    private MyServices productService;
 
     @GetMapping
-    public List<Product> getAllProduct(){
-        return productRepository.findAll();
+    public ResponseEntity<List<productDTO>> getAllProducts() {
+        List<productDTO> productDTOs = productService.getAllProducts();
+        return ResponseEntity.ok(productDTOs);
     }
-
-    //create product restApi
 
     @PostMapping
-    public Product createProduct(@RequestBody Product product){
-        return productRepository.save(product);
+    public ResponseEntity<productDTO> createProduct(@RequestBody productDTO productDTO) {
+        productDTO createdProductDTO = productService.createProduct(productDTO);
+        return new ResponseEntity<>(createdProductDTO, HttpStatus.CREATED);
     }
 
-    //build get product by Id Rest API
-    @GetMapping("{id}")
-    public ResponseEntity<Product> getProductById(@PathVariable long id){
-        Product p = productRepository.findById(id)
-                .orElseThrow(() -> new ResourseNotFoundException("product not found by id"+" "+id));
-
-        return ResponseEntity.ok(p);
+    @GetMapping("/{id}")
+    public ResponseEntity<productDTO> getProductById(@PathVariable long id) {
+        productDTO productDTO = productService.getProductById(id);
+        return ResponseEntity.ok(productDTO);
     }
 
-    //build update product RestAPI
-    @PutMapping("{id}")
-    public ResponseEntity<Product> updateProduct(@PathVariable long id, @RequestBody Product productDetails){
-             Product updatePro = productRepository.findById(id).orElseThrow(() -> new
-                     ResourseNotFoundException("product not found with the id :"+id));
-
-             updatePro.setProductName(productDetails.getProductName());
-             updatePro.setProductPrice(productDetails.getProductPrice());
-             updatePro.setProductDescription(productDetails.getProductDescription());
-
-             productRepository.save(updatePro);
-             return ResponseEntity.ok(updatePro);
+    @PutMapping("/{id}")
+    public ResponseEntity<productDTO> updateProduct(@PathVariable long id, @RequestBody productDTO productDTO) {
+        productDTO updatedProductDTO = productService.updateProduct(id, productDTO);
+        return ResponseEntity.ok(updatedProductDTO);
     }
 
-    //build delete product RestAPI
-    @DeleteMapping("{id}")
-    public ResponseEntity<HttpStatus> deleteProduct(@PathVariable long id){
-        Product deletePro = productRepository.findById(id).orElseThrow(() -> new
-                ResourseNotFoundException("product not found with the id :"+id));
-        productRepository.delete(deletePro);
-
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteProduct(@PathVariable long id) {
+        productService.deleteProduct(id);
+        return ResponseEntity.noContent().build();
     }
-    
-
-
 }
