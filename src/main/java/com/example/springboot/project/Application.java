@@ -1,6 +1,6 @@
 package com.example.springboot.project;
 
-import com.example.springboot.project.model.Product;
+import com.example.springboot.project.entities.Product;
 import com.example.springboot.project.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;

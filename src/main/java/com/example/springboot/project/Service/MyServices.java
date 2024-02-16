@@ -1,7 +1,7 @@
 package com.example.springboot.project.Service;
 
 import com.example.springboot.project.dto.productDTO;
-import com.example.springboot.project.model.Product;
+import com.example.springboot.project.entities.Product;
 import com.example.springboot.project.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -70,5 +70,5 @@ public class MyServices {
         productRepository.deleteById(id);
     }
 
-    // Other methods as needed
+
 }
