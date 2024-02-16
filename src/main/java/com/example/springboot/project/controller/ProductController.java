@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
+
 
 @RestController
 @RequestMapping("/api/v1/product")
@@ -25,8 +25,8 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<productDTO> createProduct(@RequestBody productDTO productDTO) {
-        productDTO createdProductDTO = productService.createProduct(productDTO);
+    public ResponseEntity<productDTO> createProduct(@RequestBody productDTO productDTO, @RequestParam Long categoryId) {
+        productDTO createdProductDTO = productService.createProduct(productDTO, categoryId);
         return new ResponseEntity<>(createdProductDTO, HttpStatus.CREATED);
     }
 
@@ -37,8 +37,8 @@ public class ProductController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<productDTO> updateProduct(@PathVariable long id, @RequestBody productDTO productDTO) {
-        productDTO updatedProductDTO = productService.updateProduct(id, productDTO);
+    public ResponseEntity<productDTO> updateProduct(@PathVariable long id, @RequestBody productDTO productDTO, @RequestParam Long categoryId) {
+        productDTO updatedProductDTO = productService.updateProduct(id, productDTO, categoryId);
         return ResponseEntity.ok(updatedProductDTO);
     }
 
@@ -47,4 +47,5 @@ public class ProductController {
         productService.deleteProduct(id);
         return ResponseEntity.noContent().build();
     }
+
 }
