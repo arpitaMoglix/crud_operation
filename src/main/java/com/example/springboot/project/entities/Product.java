@@ -1,5 +1,6 @@
 package com.example.springboot.project.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -26,9 +27,8 @@ public class Product {
     @Column(name = "product_description")
     private String productDescription;
 
-    @ManyToOne
-    @JoinColumn(name = "category_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "id")
+    @JsonBackReference
     private Category category;
-
 }
-
