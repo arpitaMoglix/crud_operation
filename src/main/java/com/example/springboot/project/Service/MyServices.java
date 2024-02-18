@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class MyServices {
+public class MyServices implements ServiceInterface{
 
     @Autowired
     private ProductRepository productRepository;
@@ -30,7 +30,7 @@ public class MyServices {
         return mapToDTO(savedProduct);
     }
 
-    // Method to map product DTO to entity
+    // product DTO to entity
     private Product mapToEntity(productDTO dto) {
         Product product = new Product();
         product.setProductName(dto.getProductName());
@@ -39,7 +39,7 @@ public class MyServices {
         return product;
     }
 
-    // Method to map product entity to DTO
+    // product entity to DTO
     private productDTO mapToDTO(Product product) {
         productDTO dto = new productDTO();
         dto.setProductId(product.getProductId());
