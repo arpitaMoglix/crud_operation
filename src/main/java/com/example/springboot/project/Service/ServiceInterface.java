@@ -5,7 +5,7 @@ import com.example.springboot.project.dto.productDTO;
 import java.util.List;
 
 public interface ServiceInterface {
-    productDTO saveProduct(productDTO dto, Long categoryId);
+
 
     List<productDTO> getAllProducts();
 

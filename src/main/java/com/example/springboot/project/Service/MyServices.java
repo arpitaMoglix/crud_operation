@@ -21,14 +21,6 @@ public class MyServices implements ServiceInterface{
     private CategoryRepository categoryRepository;
 
     // Method to save product DTO
-    public productDTO saveProduct(productDTO dto, Long categoryId) {
-        Product product = mapToEntity(dto);
-        Category category = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new RuntimeException("Category not found with id: " + categoryId));
-        product.setCategory(category);
-        Product savedProduct = productRepository.save(product);
-        return mapToDTO(savedProduct);
-    }
 
     // product DTO to entity
     private Product mapToEntity(productDTO dto) {
