@@ -1,6 +1,7 @@
 package com.example.springboot.project.controller;
 
 import com.example.springboot.project.Service.MyServices;
+import com.example.springboot.project.Service.ServiceInterface;
 import com.example.springboot.project.dto.productDTO;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,11 +13,11 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("/api/v1/product")
+@RequestMapping("/product")
 public class ProductController {
 
     @Autowired
-    private MyServices productService;
+    private ServiceInterface productService;
 
     @GetMapping
     public ResponseEntity<List<productDTO>> getAllProducts() {
@@ -49,3 +50,4 @@ public class ProductController {
     }
 
 }
+
