@@ -1,19 +1,19 @@
 package com.example.springboot.project.Service;
 
-import com.example.springboot.project.dto.productDTO;
+import com.example.springboot.project.dto.ProductDTO;
 
 import java.util.List;
 
 public interface ProductServiceInterface {
 
 
-    List<productDTO> getAllProducts();
+    List<ProductDTO> getAllProducts();
 
-    productDTO createProduct(productDTO productDTO, Long categoryId);
+    ProductDTO createProduct(ProductDTO productDTO, Long categoryId);
 
-    productDTO getProductById(long id);
+    ProductDTO getProductById(long id);
 
-    productDTO updateProduct(long id, productDTO productDTO, Long categoryId);
+    ProductDTO updateProduct(long id, ProductDTO productDTO, Long categoryId);
 
     void deleteProduct(long id);
 

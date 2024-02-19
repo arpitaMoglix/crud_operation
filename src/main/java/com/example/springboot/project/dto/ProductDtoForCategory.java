@@ -1,5 +1,6 @@
 package com.example.springboot.project.dto;
 
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -7,14 +8,6 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class productDTO {
-
+public class ProductDtoForCategory {
     private Long productId;
-    private String productName;
-    private Double productPrice;
-    private String productDescription;
-    private Long categoryId;
-    private String categoryName;
-
-
 }

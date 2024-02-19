@@ -1,6 +1,6 @@
 package com.example.springboot.project.Service;
 
-import com.example.springboot.project.dto.productDTO;
+import com.example.springboot.project.dto.ProductDTO;
 import com.example.springboot.project.entities.Product;
 import com.example.springboot.project.entities.Category;
 import com.example.springboot.project.repository.ProductRepository;
@@ -25,12 +25,12 @@ public class productService implements ProductServiceInterface {
     // product DTO to entity
 
 
-    public List<productDTO> getAllProducts() {
+    public List<ProductDTO> getAllProducts() {
         List<Product> products = productRepository.findAll();
         return products.stream().map(this::mapToDTO).collect(Collectors.toList());
     }
 
-    public productDTO createProduct(productDTO productDTO, Long categoryId) {
+    public ProductDTO createProduct(ProductDTO productDTO, Long categoryId) {
         // Retrieve the Category from the repository
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new RuntimeException("Category not found with id: " + categoryId));
@@ -49,13 +49,13 @@ public class productService implements ProductServiceInterface {
     }
 
 
-    public productDTO getProductById(long id) {
+    public ProductDTO getProductById(long id) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Product not found with id: " + id));
         return mapToDTO(product);
     }
 
-    public productDTO updateProduct(long id, productDTO productDTO, Long categoryId) {
+    public ProductDTO updateProduct(long id, ProductDTO productDTO, Long categoryId) {
         Product existingProduct = productRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Product not found with id: " + id));
 
@@ -86,7 +86,7 @@ public class productService implements ProductServiceInterface {
     }
 
 
-    private Product mapToEntity(productDTO dto) {
+    private Product mapToEntity(ProductDTO dto) {
         Product product = new Product();
         product.setProductName(dto.getProductName());
         product.setProductPrice(dto.getProductPrice());
@@ -95,8 +95,8 @@ public class productService implements ProductServiceInterface {
     }
 
     // product entity to DTO
-    private productDTO mapToDTO(Product product) {
-        productDTO dto = new productDTO();
+    private ProductDTO mapToDTO(Product product) {
+        ProductDTO dto = new ProductDTO();
         dto.setProductId(product.getProductId());
         dto.setProductName(product.getProductName());
         dto.setProductPrice(product.getProductPrice());
