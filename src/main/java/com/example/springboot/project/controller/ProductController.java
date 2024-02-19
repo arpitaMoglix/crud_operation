@@ -1,7 +1,6 @@
 package com.example.springboot.project.controller;
 
-import com.example.springboot.project.Service.MyServices;
-import com.example.springboot.project.Service.ServiceInterface;
+import com.example.springboot.project.Service.ProductServiceInterface;
 import com.example.springboot.project.dto.productDTO;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +16,7 @@ import java.util.List;
 public class ProductController {
 
     @Autowired
-    private ServiceInterface productService;
+    private ProductServiceInterface productService;
 
     @GetMapping
     public ResponseEntity<List<productDTO>> getAllProducts() {
@@ -45,10 +44,16 @@ public class ProductController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteProduct(@PathVariable long id) {
-        productService.deleteProduct(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<?> deleteProduct(@PathVariable long id) {
+        try {
+            productService.deleteProduct(id);
+            return ResponseEntity.noContent().build();
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Product not found with id: " + id);
+        }
     }
+
+
 
 }
 

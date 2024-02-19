@@ -4,7 +4,7 @@ import com.example.springboot.project.dto.productDTO;
 
 import java.util.List;
 
-public interface ServiceInterface {
+public interface ProductServiceInterface {
 
 
     List<productDTO> getAllProducts();

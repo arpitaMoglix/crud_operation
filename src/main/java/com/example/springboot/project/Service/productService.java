@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class MyServices implements ServiceInterface{
+public class productService implements ProductServiceInterface {
 
     @Autowired
     private ProductRepository productRepository;
@@ -20,9 +20,72 @@ public class MyServices implements ServiceInterface{
     @Autowired
     private CategoryRepository categoryRepository;
 
-    // Method to save product DTO
+
 
     // product DTO to entity
+
+
+    public List<productDTO> getAllProducts() {
+        List<Product> products = productRepository.findAll();
+        return products.stream().map(this::mapToDTO).collect(Collectors.toList());
+    }
+
+    public productDTO createProduct(productDTO productDTO, Long categoryId) {
+        // Retrieve the Category from the repository
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new RuntimeException("Category not found with id: " + categoryId));
+
+        // Map productDTO to Product entity
+        Product product = mapToEntity(productDTO);
+
+        // Associate the Category with the Product
+        product.setCategory(category);
+
+        // Save the Product
+        product = productRepository.save(product);
+
+        // Map the saved Product back to productDTO and return
+        return mapToDTO(product);
+    }
+
+
+    public productDTO getProductById(long id) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Product not found with id: " + id));
+        return mapToDTO(product);
+    }
+
+    public productDTO updateProduct(long id, productDTO productDTO, Long categoryId) {
+        Product existingProduct = productRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Product not found with id: " + id));
+
+        // Check if the category ID has changed
+        if (existingProduct.getCategory() == null || !existingProduct.getCategory().getId().equals(categoryId)) {
+            Category category = categoryRepository.findById(categoryId)
+                    .orElseThrow(() -> new RuntimeException("Category not found with id: " + categoryId));
+            existingProduct.setCategory(category);
+        }
+
+        // Update other product details
+        existingProduct.setProductName(productDTO.getProductName());
+        existingProduct.setProductPrice(productDTO.getProductPrice());
+        existingProduct.setProductDescription(productDTO.getProductDescription());
+
+        Product updatedProduct = productRepository.save(existingProduct);
+        return mapToDTO(updatedProduct);
+    }
+
+
+    public void deleteProduct(long id) {
+        try {
+            productRepository.deleteById(id);
+        } catch (Exception e) {
+            // Handle the case where the product with the given id doesn't exist
+            throw new RuntimeException("Product not found with id: " + id);
+        };
+    }
+
+
     private Product mapToEntity(productDTO dto) {
         Product product = new Product();
         product.setProductName(dto.getProductName());
@@ -46,55 +109,5 @@ public class MyServices implements ServiceInterface{
         }
 
         return dto;
-    }
-
-    public List<productDTO> getAllProducts() {
-        List<Product> products = productRepository.findAll();
-        return products.stream().map(this::mapToDTO).collect(Collectors.toList());
-    }
-
-    public productDTO createProduct(productDTO productDTO, Long categoryId) {
-        // Retrieve the Category from the repository
-        Category category = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new RuntimeException("Category not found with id: " + categoryId));
-
-        // Map productDTO to Product entity
-        Product product = mapToEntity(productDTO);
-
-        // Associate the Category with the Product
-        product.setCategory(category);
-
-        // Save the Product
-        Product savedProduct = productRepository.save(product);
-
-        // Map the saved Product back to productDTO and return
-        return mapToDTO(savedProduct);
-    }
-
-
-    public productDTO getProductById(long id) {
-        Product product = productRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Product not found with id: " + id));
-        return mapToDTO(product);
-    }
-
-    public productDTO updateProduct(long id, productDTO productDTO, Long categoryId) {
-        Product existingProduct = productRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Product not found with id: " + id));
-        existingProduct.setProductName(productDTO.getProductName());
-        existingProduct.setProductPrice(productDTO.getProductPrice());
-        existingProduct.setProductDescription(productDTO.getProductDescription());
-
-        // Set the category again for the updated product
-        Category category = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new RuntimeException("Category not found with id: " + categoryId));
-        existingProduct.setCategory(category);
-
-        Product updatedProduct = productRepository.save(existingProduct);
-        return mapToDTO(updatedProduct);
-    }
-
-    public void deleteProduct(long id) {
-        productRepository.deleteById(id);
     }
 }
