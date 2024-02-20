@@ -1,40 +1,41 @@
 package com.example.springboot.project.Service;
 
-import com.example.springboot.project.dto.CategoryDTO;
-import com.example.springboot.project.dto.ProductDTO;
+import com.example.springboot.project.dto.CategoryDtoForGetDelete;
+import com.example.springboot.project.dto.CategoryDtoForPostPut;
 import com.example.springboot.project.dto.ProductDtoForCategory;
 import com.example.springboot.project.entities.Category;
 import com.example.springboot.project.repository.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class CategoryService implements CategoryServiceInterface {
+public class CategoryService implements CategoryServiceInterface{
 
     @Autowired
     private CategoryRepository categoryRepository;
 
-    public List<CategoryDTO> getAllCategories() {
+    public List<CategoryDtoForGetDelete> getAllCategories() {
         List<Category> categories = categoryRepository.findAll();
         return categories.stream().map(this::mapToDTO).collect(Collectors.toList());
     }
 
-    public CategoryDTO getCategoryById(long id) {
+    public CategoryDtoForGetDelete getCategoryById(long id) {
         Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Category not found with id: " + id));
         return mapToDTO(category);
     }
 
-    public CategoryDTO createCategory(CategoryDTO categoryDTO) {
+    public CategoryDtoForGetDelete createCategory(CategoryDtoForPostPut categoryDTO) {
         Category category = mapToEntity(categoryDTO);
         category = categoryRepository.save(category);
         return mapToDTO(category);
     }
 
-    public CategoryDTO updateCategory(long id, CategoryDTO categoryDTO) {
+    public CategoryDtoForGetDelete updateCategory(long id, CategoryDtoForPostPut categoryDTO) {
         Category existingCategory = categoryRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Category not found with id: " + id));
 
@@ -45,40 +46,43 @@ public class CategoryService implements CategoryServiceInterface {
     }
 
     public void deleteCategory(long id) {
-        try {
+        if (categoryRepository.existsById(id)) {
             categoryRepository.deleteById(id);
-        } catch (Exception e) {
-            // Handle the case where the category with the given id doesn't exist
+        } else {
             throw new RuntimeException("Category not found with id: " + id);
         }
     }
 
-    private Category mapToEntity(CategoryDTO dto) {
+    private Category mapToEntity(CategoryDtoForPostPut dto) {
         Category category = new Category();
         category.setCategoryName(dto.getCategoryName());
         return category;
     }
 
-
-    private CategoryDTO mapToDTO(Category category) {
-        CategoryDTO dto = new CategoryDTO();
+    private CategoryDtoForGetDelete mapToDTO(Category category) {
+        CategoryDtoForGetDelete dto = new CategoryDtoForGetDelete();
         dto.setId(category.getId());
         dto.setCategoryName(category.getCategoryName());
 
-        // Mapping products associated with the category
-        List<ProductDtoForCategory> productDTOs = category.getProducts().stream()
-                .map(product -> {
-                    ProductDtoForCategory ProductDtoForCategory= new ProductDtoForCategory();
-                    ProductDtoForCategory.setProductId(product.getProductId());
+        //if products list is not null
+        if (category.getProducts() != null) {
+            // Mapping products associated with the category
+            List<ProductDtoForCategory> productDTOs = category.getProducts().stream()
+                    .map(product -> {
+                        ProductDtoForCategory productDto = new ProductDtoForCategory();
+                        productDto.setProductId(product.getProductId());
 
-                    return ProductDtoForCategory;
-                })
-                .collect(Collectors.toList());
-        dto.setProducts(productDTOs);
+                        return productDto;
+                    })
+                    .collect(Collectors.toList());
+            dto.setProducts(productDTOs);
+        } else {
+            // Handling the case where products list is null
+            dto.setProducts(Collections.emptyList());
+        }
 
         return dto;
     }
 
-
-
 }
+

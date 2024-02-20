@@ -31,20 +31,20 @@ public class productService implements ProductServiceInterface {
     }
 
     public ProductDTO createProduct(ProductDTO productDTO, Long categoryId) {
-        // Retrieve the Category from the repository
+
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new RuntimeException("Category not found with id: " + categoryId));
 
-        // Map productDTO to Product entity
+
         Product product = mapToEntity(productDTO);
 
-        // Associate the Category with the Product
+
         product.setCategory(category);
 
-        // Save the Product
+
         product = productRepository.save(product);
 
-        // Map the saved Product back to productDTO and return
+
         return mapToDTO(product);
     }
 

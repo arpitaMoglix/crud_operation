@@ -4,17 +4,15 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductDTO {
-
-    private Long productId;
-    private String productName;
-    private Double productPrice;
-    private String productDescription;
-    private Long categoryId;
+public class CategoryDtoForGetDelete {
+    private Long id;
     private String categoryName;
-
-
+    private List<ProductDtoForCategory> products = new ArrayList<>();
 }
+

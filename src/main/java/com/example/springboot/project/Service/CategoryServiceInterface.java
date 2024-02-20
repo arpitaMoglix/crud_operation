@@ -1,18 +1,20 @@
 package com.example.springboot.project.Service;
 
-import com.example.springboot.project.dto.CategoryDTO;
+import com.example.springboot.project.dto.CategoryDtoForGetDelete;
+import com.example.springboot.project.dto.CategoryDtoForPostPut;
 
 import java.util.List;
 
 public interface CategoryServiceInterface {
 
-    List<CategoryDTO> getAllCategories();
+    List<CategoryDtoForGetDelete> getAllCategories();
 
-    CategoryDTO getCategoryById(long id);
+    CategoryDtoForGetDelete getCategoryById(long id);
 
-    CategoryDTO createCategory(CategoryDTO categoryDTO);
+    CategoryDtoForGetDelete createCategory(CategoryDtoForPostPut categoryDTO);
 
-    CategoryDTO updateCategory(long id, CategoryDTO categoryDTO);
+    CategoryDtoForGetDelete updateCategory(long id, CategoryDtoForPostPut categoryDTO);
 
     void deleteCategory(long id);
 }
+

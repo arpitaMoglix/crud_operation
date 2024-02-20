@@ -1,7 +1,8 @@
 package com.example.springboot.project.controller;
 
 import com.example.springboot.project.Service.CategoryServiceInterface;
-import com.example.springboot.project.dto.CategoryDTO;
+import com.example.springboot.project.dto.CategoryDtoForGetDelete;
+import com.example.springboot.project.dto.CategoryDtoForPostPut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,26 +18,28 @@ public class CategoryController {
     private CategoryServiceInterface categoryService;
 
     @GetMapping
-    public ResponseEntity<List<CategoryDTO>> getAllCategories() {
-        List<CategoryDTO> categoryDTOs = categoryService.getAllCategories();
+    public ResponseEntity<List<CategoryDtoForGetDelete>> getAllCategories() {
+        List<CategoryDtoForGetDelete> categoryDTOs = categoryService.getAllCategories();
         return ResponseEntity.ok(categoryDTOs);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CategoryDTO> getCategoryById(@PathVariable long id) {
-        CategoryDTO categoryDTO = categoryService.getCategoryById(id);
+    public ResponseEntity<CategoryDtoForGetDelete> getCategoryById(@PathVariable long id) {
+        CategoryDtoForGetDelete categoryDTO = categoryService.getCategoryById(id);
         return ResponseEntity.ok(categoryDTO);
     }
 
     @PostMapping
-    public ResponseEntity<CategoryDTO> createCategory(@RequestBody CategoryDTO categoryDTO) {
-        CategoryDTO createdCategoryDTO = categoryService.createCategory(categoryDTO);
-        return new ResponseEntity<>(createdCategoryDTO, HttpStatus.CREATED);
+    public ResponseEntity<CategoryDtoForGetDelete> createCategory(@RequestBody CategoryDtoForPostPut categoryDTO) {
+
+            CategoryDtoForGetDelete createdCategoryDTO = categoryService.createCategory(categoryDTO);
+            return new ResponseEntity<>(createdCategoryDTO, HttpStatus.CREATED);
+
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CategoryDTO> updateCategory(@PathVariable long id, @RequestBody CategoryDTO categoryDTO) {
-        CategoryDTO updatedCategoryDTO = categoryService.updateCategory(id, categoryDTO);
+    public ResponseEntity<CategoryDtoForGetDelete> updateCategory(@PathVariable long id, @RequestBody CategoryDtoForPostPut categoryDTO) {
+        CategoryDtoForGetDelete updatedCategoryDTO = categoryService.updateCategory(id, categoryDTO);
         return ResponseEntity.ok(updatedCategoryDTO);
     }
 
