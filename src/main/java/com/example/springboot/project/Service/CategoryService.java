@@ -2,7 +2,7 @@ package com.example.springboot.project.Service;
 
 import com.example.springboot.project.dto.CategoryDtoForGetDelete;
 import com.example.springboot.project.dto.CategoryDtoForPostPut;
-import com.example.springboot.project.dto.ProductDtoForCategory;
+import com.example.springboot.project.dto.ProductDtoWithIdOnly;
 import com.example.springboot.project.entities.Category;
 import com.example.springboot.project.repository.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,9 +67,9 @@ public class CategoryService implements CategoryServiceInterface{
         //if products list is not null
         if (category.getProducts() != null) {
             // Mapping products associated with the category
-            List<ProductDtoForCategory> productDTOs = category.getProducts().stream()
+            List<ProductDtoWithIdOnly> productDTOs = category.getProducts().stream()
                     .map(product -> {
-                        ProductDtoForCategory productDto = new ProductDtoForCategory();
+                        ProductDtoWithIdOnly productDto = new ProductDtoWithIdOnly();
                         productDto.setProductId(product.getProductId());
 
                         return productDto;

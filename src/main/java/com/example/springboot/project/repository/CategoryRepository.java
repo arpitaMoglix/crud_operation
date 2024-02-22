@@ -8,5 +8,3 @@ import org.springframework.stereotype.Repository;
 public interface CategoryRepository extends JpaRepository<Category, Long> {
     // All CRUD operations will be inherited from JpaRepository
 }
-
-
