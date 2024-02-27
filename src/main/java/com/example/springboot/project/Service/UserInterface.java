@@ -1,6 +1,6 @@
-/*package com.example.springboot.project.Service;
+package com.example.springboot.project.Service;
 
 public interface UserInterface {
 
+
 }
-*/

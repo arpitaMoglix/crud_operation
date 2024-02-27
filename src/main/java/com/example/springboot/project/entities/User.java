@@ -1,4 +1,4 @@
-/*package com.example.springboot.project.entities;
+package com.example.springboot.project.entities;
 
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -41,9 +41,15 @@ public class User {
     @Column(name = "updated_at", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
     private Date updatedAt;
 
-    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JsonBackReference
+//  @OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+//    @JsonBackReference
+//    private Cart cart;
+
+//    @OneToOne
+//
+//    private Cart cart;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private Cart cart;
 
 }
-*/

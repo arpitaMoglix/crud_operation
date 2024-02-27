@@ -31,6 +31,9 @@ public class Product {
     @Column(name = "product_description")
     private String Description;
 
+    @Column(name = "product_quantity")
+    private Integer Quantity;
+
     @Column(name = "created_at", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
@@ -44,9 +47,7 @@ public class Product {
     @JsonBackReference
     private Category category;
 
-    /*@ManyToMany(mappedBy = "products", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JsonBackReference
-    private List<User> users;*/
+
 
 
 }

@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 
-
 @Service
 public class CartService implements CartServiceInterface{
     @Autowired
@@ -42,47 +41,7 @@ public class CartService implements CartServiceInterface{
         return savedCart.getId();
     }
 
-    /*public CartDtoResponse addProductToCart(Long cartId, CartDtoRequest cartDtoRequest) {
-        // Validate input DTO
-        if (cartDtoRequest.getProducts() == null || cartDtoRequest.getProductQuantityInCart() <= 0) {
-            // Handle invalid input
-            throw new IllegalArgumentException("Invalid CartDtoRequest");
-        }
 
-        // Fetch Cart entity by cartId
-        Cart cart = cartRepository.findById(cartId)
-                .orElseThrow(() -> new IllegalArgumentException("Cart not found"));
-
-        for (ProductDtoWithIdOnly productDtoWithIdOnly : cartDtoRequest.getProducts()) {
-            // Fetch product details by productId from ProductService
-            ProductDTO fetch = productService.getProductById(productDtoWithIdOnly.getProductId());// Required type:
-
-            // Map ProductDTO to ProductDtoWithoutCategory
-            ProductDtoWithoutCategory productDtoWithoutCategory = mapToProductDtoWithoutCategory(fetch);*//*Required type:
-            Product
-            Provided:
-            ProductDTO*//*
-
-            // Map ProductDtoWithoutCategory to Product entity
-            Product product = mapToProductEntity(productDtoWithoutCategory);
-
-            // Add product to the cart
-            cart.getProduct().add(product);
-        }
-
-
-
-        // Update cart details
-        cart.setProductQuantityInCart(cart.getProductQuantityInCart() + cartDtoRequest.getProductQuantityInCart());
-        cart.setUpdatedAt(new Date());
-
-        // Save/update the cart
-        cart = cartRepository.save(cart);
-
-        // Map to DTO and return
-        return mapToDTO(cart);
-    }
-*/
     public CartDtoResponse addProductToCartV1(Long cartId, CartDtoRequest cartDtoRequest) {
         // Validate input DTO
         if (cartDtoRequest.getProducts() == null || cartDtoRequest.getProductQuantityInCart() <= 0) {
