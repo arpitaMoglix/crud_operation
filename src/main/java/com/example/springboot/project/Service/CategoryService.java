@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -53,16 +54,25 @@ public class CategoryService implements CategoryServiceInterface{
         }
     }
 
+
     private Category mapToEntity(CategoryDtoForPostPut dto) {
         Category category = new Category();
         category.setCategoryName(dto.getCategoryName());
+        Date now = new Date(); // Current timestamp
+        category.setCreatedAt(now);
+        category.setUpdatedAt(now);
         return category;
     }
+
 
     private CategoryDtoForGetDelete mapToDTO(Category category) {
         CategoryDtoForGetDelete dto = new CategoryDtoForGetDelete();
         dto.setId(category.getId());
         dto.setCategoryName(category.getCategoryName());
+        dto.setCreatedAt(category.getCreatedAt());
+        dto.setUpdatedAt(category.getUpdatedAt());
+
+
 
         //if products list is not null
         if (category.getProducts() != null) {
@@ -70,7 +80,7 @@ public class CategoryService implements CategoryServiceInterface{
             List<ProductDtoWithIdOnly> productDTOs = category.getProducts().stream()
                     .map(product -> {
                         ProductDtoWithIdOnly productDto = new ProductDtoWithIdOnly();
-                        productDto.setProductId(product.getProductId());
+                        productDto.setProductId(product.getId());
 
                         return productDto;
                     })

@@ -1,24 +1,28 @@
 package com.example.springboot.project.Service;
 
-import com.example.springboot.project.dto.CartDTO;
-import com.example.springboot.project.dto.CartItemDtoResponse;
-import com.example.springboot.project.dto.ProductDTO;
+import com.example.springboot.project.dto.*;
 import com.example.springboot.project.entities.Cart;
-import com.example.springboot.project.entities.CartItem;
+import com.example.springboot.project.entities.Product;
+import com.example.springboot.project.repository.ProductRepository;
 import com.example.springboot.project.repository.CartRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-import java.util.stream.Collectors;
+import java.util.*;
+
 
 @Service
-public class CartService implements CartServiceInterface {
+public class CartService implements CartServiceInterface{
+    @Autowired
+    private ProductRepository productRepository;
 
     @Autowired
     private CartRepository cartRepository;
 
-    public CartDTO getCartById(Long cartId) {
+    @Autowired
+    private productService productService;
+
+    public CartDtoResponse getCartById(Long cartId) {
         Optional<Cart> optionalCart = cartRepository.findById(cartId);
         if (optionalCart.isPresent()) {
             Cart cart = optionalCart.get();
@@ -28,50 +32,134 @@ public class CartService implements CartServiceInterface {
         }
     }
 
-
     public Long createCart() {
         Cart cart = new Cart();
+        Date now = new Date();
+        cart.setCreatedAt(now);
+        cart.setUpdatedAt(now);
+        // Set creation timestamp
         Cart savedCart = cartRepository.save(cart);
-        return savedCart.getCartId();
+        return savedCart.getId();
     }
 
-    public void clearCart(Long cartId) {
-        Optional<Cart> optionalCart = cartRepository.findById(cartId);
-        if (optionalCart.isPresent()) {
-            Cart cart = optionalCart.get();
-            cart.getCartItems().clear();
-            cartRepository.save(cart);
-        } else {
-            throw new RuntimeException("Cart not found with id: " + cartId);
+    /*public CartDtoResponse addProductToCart(Long cartId, CartDtoRequest cartDtoRequest) {
+        // Validate input DTO
+        if (cartDtoRequest.getProducts() == null || cartDtoRequest.getProductQuantityInCart() <= 0) {
+            // Handle invalid input
+            throw new IllegalArgumentException("Invalid CartDtoRequest");
         }
+
+        // Fetch Cart entity by cartId
+        Cart cart = cartRepository.findById(cartId)
+                .orElseThrow(() -> new IllegalArgumentException("Cart not found"));
+
+        for (ProductDtoWithIdOnly productDtoWithIdOnly : cartDtoRequest.getProducts()) {
+            // Fetch product details by productId from ProductService
+            ProductDTO fetch = productService.getProductById(productDtoWithIdOnly.getProductId());// Required type:
+
+            // Map ProductDTO to ProductDtoWithoutCategory
+            ProductDtoWithoutCategory productDtoWithoutCategory = mapToProductDtoWithoutCategory(fetch);*//*Required type:
+            Product
+            Provided:
+            ProductDTO*//*
+
+            // Map ProductDtoWithoutCategory to Product entity
+            Product product = mapToProductEntity(productDtoWithoutCategory);
+
+            // Add product to the cart
+            cart.getProduct().add(product);
+        }
+
+
+
+        // Update cart details
+        cart.setProductQuantityInCart(cart.getProductQuantityInCart() + cartDtoRequest.getProductQuantityInCart());
+        cart.setUpdatedAt(new Date());
+
+        // Save/update the cart
+        cart = cartRepository.save(cart);
+
+        // Map to DTO and return
+        return mapToDTO(cart);
+    }
+*/
+    public CartDtoResponse addProductToCartV1(Long cartId, CartDtoRequest cartDtoRequest) {
+        // Validate input DTO
+        if (cartDtoRequest.getProducts() == null || cartDtoRequest.getProductQuantityInCart() <= 0) {
+            // Handle invalid input
+            throw new IllegalArgumentException("Invalid CartDtoRequest");
+        }
+
+        // Fetch Cart entity by cartId
+        Cart cart = cartRepository.findById(cartId)
+                .orElseThrow(() -> new IllegalArgumentException("Cart not found"));
+
+            Product product = productRepository.findById(cartDtoRequest.getProducts().get(0).getProductId()).get();
+
+        cart.setProduct(product);
+        // Update cart details
+        cart.setProductQuantityInCart(cart.getProductQuantityInCart() + cartDtoRequest.getProductQuantityInCart());
+        cart.setUpdatedAt(new Date());
+
+        // Save/update the cart
+        cart = cartRepository.save(cart);
+
+        // Map to DTO and return
+        return mapToDTO(cart);
+    }
+
+    public void removeProductFromCart(Long cartId) {
+        // Remove Cart by id
+        cartRepository.deleteById(cartId);
+    }
+
+    private Product mapToProductEntity(ProductDtoWithoutCategory productDto) {
+        // Map ProductDTO to Product entity
+        Product product = new Product();
+        product.setId(productDto.getProductId());
+        product.setName(productDto.getProductName());
+        product.setPrice(productDto.getProductPrice());
+        product.setDescription(productDto.getProductDescription());
+
+        return product;
+    }
+
+    private CartDtoResponse mapToDTO(Cart cart) {
+        // Map Cart entity to CartDtoResponse
+        CartDtoResponse cartDtoResponse = new CartDtoResponse();
+        cartDtoResponse.setId(cart.getId());
+        cartDtoResponse.setProductQuantityInCart(cart.getProductQuantityInCart());
+        cartDtoResponse.setCreatedAt(cart.getCreatedAt());
+        cartDtoResponse.setUpdatedAt(cart.getUpdatedAt());
+
+        ProductDtoWithoutCategory productDto = mapToProductDtoWithoutCategory(cart.getProduct());
+
+        cartDtoResponse.setProducts(Collections.singletonList(productDto));
+
+        return cartDtoResponse;
     }
 
 
 
-    private CartDTO mapToDTO(Cart cart) {
-        CartDTO cartDTO = new CartDTO();
-        cartDTO.setCartId(cart.getCartId());
-        cartDTO.setCartItems(cart.getCartItems().stream().map(this::mapToCartItemDTO).collect(Collectors.toList()));
-        return cartDTO;
+    private ProductDtoWithoutCategory mapToProductDtoWithoutCategory(Product product) {
+        ProductDtoWithoutCategory productDtoWithoutCategory = new ProductDtoWithoutCategory();
+        productDtoWithoutCategory.setProductId(product.getId());
+        productDtoWithoutCategory.setProductName(product.getName());
+        productDtoWithoutCategory.setProductPrice(product.getPrice());
+        productDtoWithoutCategory.setProductDescription(product.getDescription());
+
+        return productDtoWithoutCategory;
     }
 
-    private CartItemDtoResponse mapToCartItemDTO(CartItem cartItem) {
-        CartItemDtoResponse cartItemDtoResponse = new CartItemDtoResponse();
-        cartItemDtoResponse.setCartItemId(cartItem.getCartItemId());
+    private ProductDtoWithoutCategory mapToProductDtoWithoutCategory(ProductDTO productDTO) {
+        ProductDtoWithoutCategory productDtoWithoutCategory = new ProductDtoWithoutCategory();
+        productDtoWithoutCategory.setProductId(productDTO.getProductId());
+        productDtoWithoutCategory.setProductName(productDTO.getProductName());
+        productDtoWithoutCategory.setProductPrice(productDTO.getProductPrice());
+        productDtoWithoutCategory.setProductDescription(productDTO.getProductDescription());
 
-        // Assuming cartItem.getProduct() returns a Product object
-        ProductDTO productDTO = new ProductDTO();
-        productDTO.setProductId(cartItem.getProduct().getProductId());
-        productDTO.setProductName(cartItem.getProduct().getProductName());
-        productDTO.setProductPrice(cartItem.getProduct().getProductPrice());
-        productDTO.setProductDescription(cartItem.getProduct().getProductDescription());
-        productDTO.setCategoryId(cartItem.getProduct().getCategory().getId());
-        productDTO.setCategoryName(cartItem.getProduct().getCategory().getCategoryName());
-
-
-        cartItemDtoResponse.setProduct(productDTO);
-        cartItemDtoResponse.setQuantity(cartItem.getQuantity());
-
-        return cartItemDtoResponse;
+        return productDtoWithoutCategory;
     }
+
 }
+

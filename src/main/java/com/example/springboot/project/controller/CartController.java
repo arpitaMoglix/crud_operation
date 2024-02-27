@@ -1,7 +1,8 @@
 package com.example.springboot.project.controller;
 
 import com.example.springboot.project.Service.CartServiceInterface;
-import com.example.springboot.project.dto.CartDTO;
+import com.example.springboot.project.dto.CartDtoRequest;
+import com.example.springboot.project.dto.CartDtoResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,14 +16,12 @@ public class CartController {
     private CartServiceInterface cartService;
 
     @GetMapping("/{cartId}")
-    public ResponseEntity<CartDTO> getCartById(@PathVariable Long cartId) {
-        CartDTO cartDTO = cartService.getCartById(cartId);
-        if (cartDTO != null) {
-            return ResponseEntity.ok(cartDTO);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<CartDtoResponse> getCartById(@PathVariable Long cartId) {
+        CartDtoResponse cartDtoResponse = cartService.getCartById(cartId);
+        return ResponseEntity.ok(cartDtoResponse);
     }
+
+
 
     @PostMapping
     public ResponseEntity<Long> createCart() {
@@ -30,5 +29,15 @@ public class CartController {
         return ResponseEntity.status(HttpStatus.CREATED).body(createdCartId);
     }
 
-}
+    @PostMapping("/{cartId}/addProduct")
+    public ResponseEntity<CartDtoResponse> addProductToCart(@PathVariable Long cartId, @RequestBody CartDtoRequest cartDtoRequest) {
+        CartDtoResponse addedCartItemDTO = cartService.addProductToCartV1(cartId, cartDtoRequest);
+        return new ResponseEntity<>(addedCartItemDTO, HttpStatus.CREATED);
+    }
 
+    @DeleteMapping("/{cartId}")
+    public ResponseEntity<?> removeProductFromCart(@PathVariable Long cartId) {
+        cartService.removeProductFromCart(cartId);
+        return ResponseEntity.noContent().build();
+    }
+}

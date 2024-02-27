@@ -8,8 +8,11 @@ import com.example.springboot.project.repository.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
+
 
 @Service
 public class productService implements ProductServiceInterface {
@@ -35,18 +38,15 @@ public class productService implements ProductServiceInterface {
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new RuntimeException("Category not found with id: " + categoryId));
 
-
         Product product = mapToEntity(productDTO);
-
 
         product.setCategory(category);
 
-
         product = productRepository.save(product);
-
 
         return mapToDTO(product);
     }
+
 
 
     public ProductDTO getProductById(long id) {
@@ -67,9 +67,12 @@ public class productService implements ProductServiceInterface {
         }
 
         // Update other product details
-        existingProduct.setProductName(productDTO.getProductName());
-        existingProduct.setProductPrice(productDTO.getProductPrice());
-        existingProduct.setProductDescription(productDTO.getProductDescription());
+        existingProduct.setName(productDTO.getProductName());
+        existingProduct.setPrice(productDTO.getProductPrice());
+        existingProduct.setDescription(productDTO.getProductDescription());
+
+        // Update updatedAt with the current timestamp
+        existingProduct.setUpdatedAt(new Date());
 
         Product updatedProduct = productRepository.save(existingProduct);
         return mapToDTO(updatedProduct);
@@ -85,24 +88,31 @@ public class productService implements ProductServiceInterface {
         };
     }
 
-
     private Product mapToEntity(ProductDTO dto) {
         Product product = new Product();
-        product.setProductName(dto.getProductName());
-        product.setProductPrice(dto.getProductPrice());
-        product.setProductDescription(dto.getProductDescription());
+        product.setName(dto.getProductName());
+        product.setPrice(dto.getProductPrice());
+        product.setDescription(dto.getProductDescription());
+        Date now = new Date(); // Current timestamp
+        product.setCreatedAt(now);
+        product.setUpdatedAt(now);
         return product;
     }
 
+
+
+
     // product entity to DTO
+
     private ProductDTO mapToDTO(Product product) {
         ProductDTO dto = new ProductDTO();
-        dto.setProductId(product.getProductId());
-        dto.setProductName(product.getProductName());
-        dto.setProductPrice(product.getProductPrice());
-        dto.setProductDescription(product.getProductDescription());
+        dto.setProductId(product.getId());
+        dto.setProductName(product.getName());
+        dto.setProductPrice(product.getPrice());
+        dto.setProductDescription(product.getDescription());
+        dto.setCreatedAt(product.getCreatedAt());
+        dto.setUpdatedAt(product.getUpdatedAt());
 
-        // Ensure the category is not null before accessing its properties
         if (product.getCategory() != null) {
             dto.setCategoryId(product.getCategory().getId());
             dto.setCategoryName(product.getCategory().getCategoryName());

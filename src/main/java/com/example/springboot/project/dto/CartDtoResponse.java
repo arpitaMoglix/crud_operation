@@ -6,20 +6,15 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductDTO {
-
-    private Long productId;
-    private String productName;
-    private Double productPrice;
-    private String productDescription;
+public class CartDtoResponse {
+    private Long Id;
+    private List<ProductDtoWithoutCategory> products;
+    private Integer productQuantityInCart;
     private Date createdAt;
     private Date updatedAt;
-    private Long categoryId;
-    private String categoryName;
-
-
 }
