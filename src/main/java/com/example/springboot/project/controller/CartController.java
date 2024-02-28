@@ -23,17 +23,17 @@ public class CartController {
 
 
 
-    @PostMapping
-    public ResponseEntity<Long> createCart() {
-        Long createdCartId = cartService.createCart();
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdCartId);
-    }
+//    @PostMapping
+//    public ResponseEntity<Long> createCart() {
+//        Long createdCartId = cartService.createCart();
+//        return ResponseEntity.status(HttpStatus.CREATED).body(createdCartId);
+//    }
 
-    @PostMapping("/{cartId}/addProduct")
-    public ResponseEntity<CartDtoResponse> addProductToCart(@PathVariable Long cartId, @RequestBody CartDtoRequest cartDtoRequest) {
-        CartDtoResponse addedCartItemDTO = cartService.addProductToCartV1(cartId, cartDtoRequest);
-        return new ResponseEntity<>(addedCartItemDTO, HttpStatus.CREATED);
-    }
+//    @PostMapping("/{cartId}/addProduct")
+//    public ResponseEntity<CartDtoResponse> addProductToCart(@PathVariable Long cartId, @RequestBody CartDtoRequest cartDtoRequest) {
+//        CartDtoResponse addedCartItemDTO = cartService.addProductToCartV1(cartId, cartDtoRequest);
+//        return new ResponseEntity<>(addedCartItemDTO, HttpStatus.CREATED);
+//    }
 
 
     @DeleteMapping("/{cartId}")

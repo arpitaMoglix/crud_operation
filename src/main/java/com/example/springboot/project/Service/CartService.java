@@ -2,9 +2,11 @@ package com.example.springboot.project.Service;
 
 import com.example.springboot.project.dto.*;
 import com.example.springboot.project.entities.Cart;
+import com.example.springboot.project.entities.User;
 import com.example.springboot.project.entities.Product;
 import com.example.springboot.project.repository.ProductRepository;
 import com.example.springboot.project.repository.CartRepository;
+import com.example.springboot.project.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +22,9 @@ public class CartService implements CartServiceInterface{
 
     @Autowired
     private productService productService;
+
+    @Autowired
+    private UserRepository userRepository;
 
     public CartDtoResponse getCartById(Long cartId) {
         Optional<Cart> optionalCart = cartRepository.findById(cartId);
@@ -42,23 +47,68 @@ public class CartService implements CartServiceInterface{
     }
 
 
-    public CartDtoResponse addProductToCartV1(Long cartId, CartDtoRequest cartDtoRequest) {
+//    public CartDtoResponse addProductToCartV1(Long cartId, CartDtoRequest cartDtoRequest) {
+//        // Validate input DTO
+//        if (cartDtoRequest.getProducts() == null || cartDtoRequest.getProductQuantityInCart() <= 0) {
+//            // Handle invalid input
+//            throw new IllegalArgumentException("Invalid CartDtoRequest");
+//        }
+//
+//        // Fetch Cart entity by cartId
+//        Cart cart = cartRepository.findById(cartId)
+//                .orElseThrow(() -> new IllegalArgumentException("Cart not found"));
+//
+//            Product product = productRepository.findById(cartDtoRequest.getProducts().get(0).getProductId()).get();
+//
+//        cart.setProduct(product);
+//        // Update cart details
+//        cart.setProductQuantityInCart(cart.getProductQuantityInCart() + cartDtoRequest.getProductQuantityInCart());
+//        cart.setUpdatedAt(new Date());
+//
+//        // Save/update the cart
+//        cart = cartRepository.save(cart);
+//
+//        // Map to DTO and return
+//        return mapToDTO(cart);
+//    }
+
+    public CartDtoResponse addProductToCartV1(Long userId, CartDtoRequest cartDtoRequest) {
         // Validate input DTO
         if (cartDtoRequest.getProducts() == null || cartDtoRequest.getProductQuantityInCart() <= 0) {
             // Handle invalid input
             throw new IllegalArgumentException("Invalid CartDtoRequest");
         }
 
-        // Fetch Cart entity by cartId
-        Cart cart = cartRepository.findById(cartId)
-                .orElseThrow(() -> new IllegalArgumentException("Cart not found"));
+        // Fetch Cart entity by user ID
+        //Optional<Cart> optionalCart = cartRepository.findByUserId(userId);
+      //  Optional<Cart> optionalCart = cartRepository.findById(userId);
 
-            Product product = productRepository.findById(cartDtoRequest.getProducts().get(0).getProductId()).get();
+        //Cart cart = optionalCart.orElse(new Cart());
 
+
+        /*if (cart.getId() == null) {
+            // Create a new cart if it doesn't exist
+            cart.setId(cartDtoRequest.getId());
+            cart.setCreatedAt(new Date()); // Set creation timestamp
+        }*/
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        Product product = productRepository.findById(cartDtoRequest.getProducts().get(0).getProductId())
+                .orElseThrow(() -> new IllegalArgumentException("Product not found"));
+
+
+
+        // Set the user ID in the cart
+        Cart cart = new Cart();        //user.setId(userId);
+        cart.setUser(user);
         cart.setProduct(product);
-        // Update cart details
-        cart.setProductQuantityInCart(cart.getProductQuantityInCart() + cartDtoRequest.getProductQuantityInCart());
+        cart.setCreatedAt(new Date());
         cart.setUpdatedAt(new Date());
+
+
+        cart.setProductQuantityInCart(cart.getProductQuantityInCart() + cartDtoRequest.getProductQuantityInCart());
 
         // Save/update the cart
         cart = cartRepository.save(cart);
@@ -66,6 +116,7 @@ public class CartService implements CartServiceInterface{
         // Map to DTO and return
         return mapToDTO(cart);
     }
+
 
     public void removeProductFromCart(Long cartId) {
         // Remove Cart by id

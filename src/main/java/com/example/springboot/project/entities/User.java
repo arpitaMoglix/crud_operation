@@ -48,8 +48,8 @@ public class User {
 //    @OneToOne
 //
 //    private Cart cart;
-
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
-    private Cart cart;
+//
+//    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+//    private Cart cart;
 
 }

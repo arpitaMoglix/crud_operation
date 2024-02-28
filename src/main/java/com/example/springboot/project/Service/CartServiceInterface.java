@@ -9,7 +9,8 @@ public interface CartServiceInterface {
     Long createCart();
 
   //  CartDtoResponse addProductToCart(Long cartId, CartDtoRequest cartDtoRequest);
-    CartDtoResponse addProductToCartV1(Long cartId, CartDtoRequest cartDtoRequest);
+    //CartDtoResponse addProductToCartV1(Long cartId, CartDtoRequest cartDtoRequest);
+  CartDtoResponse addProductToCartV1(Long userId, CartDtoRequest cartDtoRequest);
 
     void removeProductFromCart(Long cartId);
 

@@ -1,6 +1,5 @@
 package com.example.springboot.project.dto;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,7 +9,7 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserDTO {
+public class UserDtoWithCart {
     private Long id;
     private String name;
     private String email;
@@ -18,5 +17,5 @@ public class UserDTO {
     private String location;
     private Date createdAt;
     private Date updatedAt;
-    //private CartDTO cart;
+    private CartDTO cart;
 }
