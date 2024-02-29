@@ -36,10 +36,11 @@ public class CartController {
 //    }
 
 
-    @DeleteMapping("/{cartId}")
-    public ResponseEntity<?> removeProductFromCart(@PathVariable Long cartId) {
-        cartService.removeProductFromCart(cartId);
-        return ResponseEntity.noContent().build();
-    }
+//    @DeleteMapping("/{cartId}")
+//    public ResponseEntity<?> removeProductFromCart(@PathVariable Long cartId) {
+//        cartService.removeProductFromCart(cartId);
+//        return ResponseEntity.noContent().build();
+//    }
 
 }
+

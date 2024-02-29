@@ -118,9 +118,25 @@ public class CartService implements CartServiceInterface{
     }
 
 
-    public void removeProductFromCart(Long cartId) {
-        // Remove Cart by id
-        cartRepository.deleteById(cartId);
+//    public void removeProductFromCart(Long cartId) {
+//        // Remove Cart by id
+//        cartRepository.deleteById(cartId);
+//    }
+
+    public void removeProductFromCart(Long userId, Long cartId) {
+        // Find the cart by userId
+       // Optional<Cart> optionalCart = cartRepository.findByUserId(userId);
+        Optional<Cart> optionalCart = cartRepository.findByIdAndUserId(cartId, userId);
+
+
+        if (optionalCart.isPresent()) {
+            // Remove the cart using its ID
+            cartRepository.deleteById(cartId);
+        } else {
+            throw new IllegalArgumentException("Cart not found for the specified user and cart ID");
+        }
+
+
     }
 
     private Product mapToProductEntity(ProductDtoWithoutCategory productDto) {

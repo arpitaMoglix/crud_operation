@@ -12,6 +12,6 @@ public interface CartServiceInterface {
     //CartDtoResponse addProductToCartV1(Long cartId, CartDtoRequest cartDtoRequest);
   CartDtoResponse addProductToCartV1(Long userId, CartDtoRequest cartDtoRequest);
 
-    void removeProductFromCart(Long cartId);
+    void removeProductFromCart(Long userId, Long CartId);
 
 }

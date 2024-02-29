@@ -19,8 +19,6 @@ public class UserController {
     @Autowired
     private UserInterface userService;
 
-
-
     @Autowired
     private CartServiceInterface cartService;
 
@@ -36,6 +34,15 @@ public class UserController {
             return ResponseEntity.notFound().build();
         }
     }
+
+
+    @DeleteMapping("/{userId}/{cartId}")
+    public ResponseEntity<?> removeProductFromCart(@PathVariable Long userId,@PathVariable Long cartId) {
+        // Forward the request to the cart service
+        cartService.removeProductFromCart(userId, cartId);
+        return ResponseEntity.noContent().build();
+    }
+
 
 
     // Endpoint to create a new user
@@ -80,6 +87,5 @@ public class UserController {
         List<UserDTO> allUsers = userService.getAllUsers();
         return ResponseEntity.ok(allUsers);
     }
-
 
 }
